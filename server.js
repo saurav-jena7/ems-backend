@@ -25,9 +25,32 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/employees", employeeRoutes);
 
+// Root welcome route — shown when visiting the base URL
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    message: "🚀 Employee Management System API is live!",
+    version: "1.0.0",
+    status: "running",
+    endpoints: {
+      health:    "GET  /api/health",
+      signup:    "POST /api/auth/signup",
+      login:     "POST /api/auth/login",
+      me:        "GET  /api/auth/me",
+      employees: "GET  /api/employees",
+    },
+    docs: "Use the endpoints above with a valid JWT Bearer token where required.",
+  });
+});
+
 // Health check
 app.get("/api/health", (req, res) =>
-  res.json({ success: true, message: "EMS API is running" })
+  res.json({
+    success: true,
+    message: "EMS API is healthy",
+    uptime:  `${Math.floor(process.uptime())}s`,
+    timestamp: new Date().toISOString(),
+  })
 );
 
 // 404 handler
